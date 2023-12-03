@@ -1,9 +1,7 @@
 BEGIN { FS = ""; total = 0 }
 
 /^.+$/ {
-
 	for (x = 1; x <= NF; x++) {
-
 		found = match($x, "[^1234567890\.]")
 		if (found != 0) 
 		{
@@ -23,7 +21,6 @@ BEGIN { FS = ""; total = 0 }
 			x +=  (delta - 1)
 		}
 	}
-
 }
 
 END { 
@@ -31,11 +28,9 @@ END {
 		for (h = (y - 1); h <= (y + 1); h++) {
 			if (h in symbol) {
 				for (x in  number[y]) {
-					found = 0
 					for (p = (x - 1); p <= (x + number[y][x]["length"]); p++) {
 						if (p in symbol[h]) {
 							total += number[y][x]["total"]
-							found = 1
 							break
 						}
 					}
