@@ -15,7 +15,9 @@ END {
 		for (s = 1; s <= cards[c]["count"]; s ++) {
 			matched = processCard(cards[c]["winners"], cards[c]["numbers"])	
 			for (i = 1; i <= matched; i++) {
-				cards[c+i]["count"]++
+				if (c+i in cards) {
+					cards[c+i]["count"]++
+				}
 			}
 		}
 	}
