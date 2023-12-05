@@ -1,7 +1,7 @@
 BEGIN { }
 
 /seeds:/ { 
-	for (s = 1; s <= NF - 1; s++) {
+	for (s = 1; s <= NF; s++) {
 		seeds[s] = $(s+1)
 	}
 }
