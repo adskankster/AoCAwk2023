@@ -1,7 +1,7 @@
 /^.+$/ {
-	score = getScore($1)
-	cards = getCards($1, score)
-	hands[cards] = 0 + $2	
+	cards = getCards($1)
+	score = getScore(cards) cards
+	hands[score] = 0 + $2	
 }
 
 END {
@@ -19,27 +19,33 @@ function getScore(hand) {
 
 	delete group
 
-	split(hand, handCards, "")
+	patsplit(hand, handCards, ".{2}")
 	for (c = 1; c <= 5; c++) {
 		group[handCards[c]]++
 	}
 
 	noGroups = 0
+	hasJacks = 0
 	for (g in group) {
-		noGroups++
+		if (g == "01") {
+			hasJacks = group[g]
+		} else {
+			noGroups++
+		}
 	}
 
 	switch (noGroups) {
+		case 0: return "7"; break
 		case 1: return "7"; break
 		case 2: 
 			for (g in group) {
-				if (group[g] == 4) return "6"
+				if ((group[g] + hasJacks) == 4) return "6"
 			} 
 			return "5"
 			break
 		case 3: 
 			for (g in group) {
-				if (group[g] == 3) return "4"
+				if ((group[g] + hasJacks) == 3) return "4"
 			} 
 			return "3"
 			break
@@ -48,29 +54,30 @@ function getScore(hand) {
 	}
 }
 
-function getCards(hand, score) {
+function getCards(hand) {
+	cards = ""
 	split(hand, handCards, "")
 	for (c in handCards) {
 		switch (handCards[c]) {
-			case "A": score = score "14"
+			case "A": cards = cards "14"
 			break
 			
-			case "K": score = score "13"
+			case "K": cards = cards "13"
 			break
 			
-			case "Q": score = score "12"
+			case "Q": cards = cards "12"
 			break
 			
-			case "J": score = score "11"
+			case "J": cards = cards "01"
 			break
 			
-			case "T": score = score "10"
+			case "T": cards = cards "10"
 			break
 			
-			default: score = score "0" handCards[c]
+			default: cards = cards "0" handCards[c]
 			break
 			
 		}
 	}
-	return 0 + score
+	return cards
 }
