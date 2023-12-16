@@ -1,5 +1,8 @@
 BEGIN { 
 	FS=",";  
+	for (b = 0; b < 256; b++) {
+		boxes[b][0] = 0
+	}
 }
 
 /^.+$/ {
@@ -18,22 +21,31 @@ END {
 		box = 0
 		x = split(codes[i]["label"], code, "") 
 		for (c = 1; c <= x; c++) {
-			box = hash(subTotal, code[c])
+			box = hash(box, code[c])
 			print "box = " box
 		}
+
+		inslot = 0 
+		for (j = 1; j <= boxes[box][0]; j++) {
+			if (j in boxes[box] &&
+			   boxes[box][j]["label"] == codes[i]["label"]) {
+				inslot = j
+				break
+			}
+		}
 		
-		if (codes[i]["label"] in boxes[box]) {
+		if (inslot > 0) {
 			if (codes[i]["action"] == "-") {
-				delete boxes[box][codes[i]["label"]]
+				delete boxes[box][inslot]
 			} else {
-				boxes[box][codes[i]["label"]]["label"] = codes[i]["label"]
-				boxes[box][codes[i]["label"]]["power"] = codes[i]["power"]
+				boxes[box][inslot]["label"] = codes[i]["label"]
+				boxes[box][inslot]["power"] = codes[i]["power"]
 			}
 		} else {
 			if (codes[i]["action"] == "=") {
-				print "add " codes[i]["power"] " to boxes[" box "][" codes[i]["label"] "]"
-				boxes[box][codes[i]["label"]]["label"] = codes[i]["label"]
-				boxes[box][codes[i]["label"]]["power"] = codes[i]["power"]
+				boxes[box][0]++
+				boxes[box][boxes[box][0]]["label"] = codes[i]["label"]
+				boxes[box][boxes[box][0]]["power"] = codes[i]["power"]
 			}
 		}
 	}
@@ -43,11 +55,12 @@ END {
 		sMult = 0
 		bMult++
 		boxTotal = 0
-		for (s in boxes[b]) {
-			sMult++
+		for (s = 1; s <= boxes[b][0]; s++) {
+			if (s in boxes[b]) {
+				sMult++
 			
-			print b "-" s ": " boxes[b][s]["label"] " - " bMult " * " sMult  " * " boxes[b][s]["power"]
-			boxTotal += (boxes[b][s]["power"] * bMult * sMult)
+				boxTotal += (boxes[b][s]["power"] * bMult * sMult)
+			}
 		}
 		total += boxTotal
 	}
