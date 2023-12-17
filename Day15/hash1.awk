@@ -1,3 +1,4 @@
+# Run with gawk --load=ordchr -f hash2.awk test
 BEGIN { FS="," }
 
 /^.+$/ {
