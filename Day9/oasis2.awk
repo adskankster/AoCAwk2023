@@ -25,7 +25,7 @@ END {
 
 		while (t != 0) {
 			x++
-			for (i = 1; i < diff[x-1][0]; i++) {
+			for (i = 1; i < maxDiff[x-1]; i++) {
 				diff[x][i] = diff[x-1][i+1] - diff[x-1][i]
 				maxDiff[x] = i
 			}
@@ -39,20 +39,20 @@ END {
 			} 
 		} 
 
-	 	for (y = x - 1; y > 0; y--) {
-			diff[y+1][0] = diff[y+1][1] - diff[y][0]
+	 	for (y = x; y > 1; y--) {
+			diff[y-1][0] = diff[y-1][1] - diff[y][0]
 		}
 			
 		set[r][0] = set[r][1] - diff[1][0]  
 
 		print "------"
-		for (z = 0; z < max + 1; z++) {
+		for (z = 0; z <= max; z++) {
 			printf("%s ", set[r][z])
 		}
 		print ": " set[r][0]
 
 		for (a in diff) {
-			for (b = 0; b < maxDiff[a]; b++) {
+			for (b = 0; b <= maxDiff[a]; b++) {
 				printf("%s ", diff[a][b])
 			}
 			print ": " diff[a][0]
