@@ -1,7 +1,6 @@
 BEGIN { FS = ""; blockNo = 1 }
 
-/^&/ { 
-	print "Empty"
+/^$/ { 
 	blockNo++ 
 	rowNo = 0
  }
